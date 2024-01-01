@@ -24,7 +24,7 @@ public class StudentService {
         return studentRepository.save(student);
     }
 
-    public List<Student> findAll() {
+    public List<Student> getStudents() {
         List<Student> students = new ArrayList<>();
         studentRepository.findAll().forEach(students::add);
 
@@ -32,6 +32,7 @@ public class StudentService {
     }
 
     public Optional<Student> findById(int id) {
+    	 
         return studentRepository.findById(id);
     }
 
@@ -45,4 +46,6 @@ public class StudentService {
     public void delete(int id) {
         studentRepository.deleteById(id);
     }
+
+
 }

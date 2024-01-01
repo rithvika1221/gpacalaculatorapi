@@ -23,6 +23,16 @@ public class SemesterService {
     	// additional logic
         return semesterRepository.save(semester);
     }
+    
+    public List<Semester> findAllSemestersByStudent(int studentId) {
+        List<Semester> semesters = new ArrayList<>();
+//        semesters = semesterRepository.findAll().stream()
+//        	      .filter(employee -> nameFilter.contains(employee.getName()))
+//        	      .collect(Collectors.toList());
+       
+
+        return semesters;
+    }
 
     public List<Semester> findAll() {
         List<Semester> semesters = new ArrayList<>();

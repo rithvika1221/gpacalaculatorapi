@@ -4,98 +4,142 @@ import java.util.List;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.fbla.gpacalculatorapi.exception.ResourceNotFoundException;
 import com.fbla.gpacalculatorapi.model.Course;
+import com.fbla.gpacalculatorapi.model.CourseRepository;
+import com.fbla.gpacalculatorapi.model.Semester;
+import com.fbla.gpacalculatorapi.model.SemesterRepository;
+import com.fbla.gpacalculatorapi.model.Student;
+import com.fbla.gpacalculatorapi.model.StudentRepository;
 import com.fbla.gpacalculatorapi.service.CourseService;
 import com.fbla.gpacalculatorapi.requests.CreateCourseInput;
+import com.fbla.gpacalculatorapi.requests.CreateSemesterInput;
 import com.fbla.gpacalculatorapi.requests.UpdateCourseInput;
+
 
 @RestController
 public class CourseController {
-    public CourseService courseService;
-  
-    
-
-    
-    public CourseController(CourseService courseService) {
-
-		this.courseService = courseService;
-    }
-    
-    
-    @PostMapping("/courses")
-    public ResponseEntity<Course> createCourse(@RequestBody CreateCourseInput createCourseInput) {
        
-    	//	Course studentCreated = studentRepository.save(createStudentInput.toStudent());
-    	// you can call the repository class directly in the controller but it is good to create a service class 
-    	// service class helps with separation of responsibility
-    	
-    	Course courseCreated = courseService.create(createCourseInput.toCourse());
-        return new ResponseEntity<>(courseCreated, HttpStatus.CREATED);
-    }
-    
-     
-    
-    @GetMapping("/courses")
-	public ResponseEntity<List<Course>> getCourse() {
-    	 List<Course> courses = courseService.findAll();
+    @Autowired
+	private StudentRepository studentRepository;
 
-    	    return new ResponseEntity<>(courses, HttpStatus.OK);
+	@Autowired
+	private SemesterRepository semesterRepository;
+	
+	@Autowired
+	private CourseRepository courseRepository;
+
+	@GetMapping("/students/{studentId}/semesters/{semesterId}/courses")
+	public ResponseEntity<List<Course>> getAllCoursesBySemesterId(@PathVariable(value = "semesterId") int semesterId) {
+
+		List<Course> courses = courseRepository.findBySemesterId(semesterId);
+		// List<Semester> semesters =
+		// semesterService.findAllSemestersByStudent(studentId);
+		return new ResponseEntity<>(courses, HttpStatus.OK);
+	}
+
+	@GetMapping("/courses")
+	public ResponseEntity<List<Course>> getCourse() {
+		List<Course> courses = courseRepository.findAll();
+
+		return new ResponseEntity<>(courses, HttpStatus.OK);
 
 	}
+
+	@GetMapping("/courses/{id}")
+	public ResponseEntity<Course> onestudent(@PathVariable int id) {
+		Optional<Course> optionalCourse = courseRepository.findById(id);
+
+		if (optionalCourse.isPresent()) {
+			return new ResponseEntity<>(optionalCourse.get(), HttpStatus.OK);
+		}
+
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
+
+	@PostMapping("/courses")
+	public ResponseEntity<Course> createCourse(@RequestBody CreateCourseInput createCourseInput) {
+
+		
+		// you can call the repository class directly in the controller but it is good
+		// to create a service class
+		// service class helps with separation of responsibility
+
+		Course courseCreated = courseRepository.save(createCourseInput.toCourse());
+		return new ResponseEntity<>(courseCreated, HttpStatus.CREATED);
+	}
+
+	@PostMapping("/students/{studentId}/semesters/{semesterId}/courses")
+	public ResponseEntity<Course> createCourse(@PathVariable(value = "semesterId") int semesterId,
+			@RequestBody CreateCourseInput createCourseRequest) {
+		
+			
+		Optional<Semester> optionalSemester = semesterRepository.findById(semesterId);
+		if (optionalSemester.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		Course course =createCourseRequest.toCourse();
+
+		Semester semester = optionalSemester.get();
+				course.setCourseSemester(semester);
+		
+		Course courseCreated = courseRepository.save(course);
+		return new ResponseEntity<>(courseCreated, HttpStatus.CREATED);
+	}
+
+	@PutMapping("/courses/{id}")
+	public ResponseEntity<Course> updateCourse(@PathVariable("id") int id,
+			@RequestBody UpdateCourseInput updateCourseInput) {
+
+
+		Optional<Course> optionalCourse = courseRepository.findById(id);
+
+		if (optionalCourse.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+		Course courseToUpdate = optionalCourse.get();
+
+		courseToUpdate.setCourseCredit(updateCourseInput.course_credit());
+		courseToUpdate.setCourseGrade(updateCourseInput.course_grade());
+		courseToUpdate.setCourseName(updateCourseInput.course_name());
+		courseToUpdate.setCourseType(updateCourseInput.course_type());
 	
-    
-   
-    
-    @GetMapping("/courses/{id}")
-    public ResponseEntity<Course> onestudent(@PathVariable int id) {
-        Optional<Course> optionalCourse = courseService.findById(id);
 
-        if (optionalCourse.isPresent()) {
-            return new ResponseEntity<>(optionalCourse.get(), HttpStatus.OK);
-        }
+		return new ResponseEntity<>(courseRepository.save(courseToUpdate), HttpStatus.OK);
+	}
 
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-    
+	@DeleteMapping("/courses/{id}")
+	public ResponseEntity<Void> deleteCourse(@PathVariable int courseId) {
+		courseRepository.deleteById(courseId);
 
-@PatchMapping("/courses/{id}")
-public ResponseEntity<Course> updateStudent(@PathVariable int id, @RequestBody UpdateCourseInput updateCourseInput) {
-    Optional<Course> optionalCourse = courseService.findById(id);
+		return ResponseEntity.noContent().build();
+	}
 
-    if (optionalCourse.isEmpty()) {
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
+	@DeleteMapping("/students/{studentId}/semesters/{semesterId}/courses/{coursesId}")
+	public ResponseEntity<List<Course>> deleteAllCoursesofSemester(
+			@PathVariable(value = "semesterId") int semesterId) {
+		Optional<Semester> optionalSemester = semesterRepository.findById(semesterId);
+		if (!optionalSemester.isPresent()) {
+			throw new ResourceNotFoundException("Not found Semester with id = " + semesterId);
+		}
 
-    Course courseToUpdate = optionalCourse.get();
+		courseRepository.deleteBySemesterId(semesterId);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
 
-   courseToUpdate.setCourseName(updateCourseInput.courseGrade());
-   courseToUpdate.setCourseCredit(updateCourseInput.courseCredit());
-   courseToUpdate.setCourseType(updateCourseInput.courseType());
-
-    Course courseUpdated =courseService.update(courseToUpdate);
-
-    return new ResponseEntity<>(courseUpdated, HttpStatus.OK);
-}
-
-
-@DeleteMapping("/courses/{id}")
-public ResponseEntity<Void> deleteTask(@PathVariable int id) {
-	courseService.delete(id);
-
-    return ResponseEntity.noContent().build();
-}
-   
-    
+       
 }
 
 
@@ -105,3 +149,4 @@ public ResponseEntity<Void> deleteTask(@PathVariable int id) {
 
 
 
+;

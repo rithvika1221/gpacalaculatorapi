@@ -4,46 +4,46 @@ import java.util.List;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.fbla.gpacalculatorapi.exception.ResourceNotFoundException;
 import com.fbla.gpacalculatorapi.model.Semester;
+import com.fbla.gpacalculatorapi.model.SemesterRepository;
+import com.fbla.gpacalculatorapi.model.Student;
+import com.fbla.gpacalculatorapi.model.StudentRepository;
 import com.fbla.gpacalculatorapi.service.SemesterService;
 import com.fbla.gpacalculatorapi.requests.CreateSemesterInput;
 import com.fbla.gpacalculatorapi.requests.UpdateSemesterInput;
 
 @RestController
 public class SemesterController {
-	public SemesterService semesterService;
+	
+	@Autowired
+	private StudentRepository studentRepository;
 
-	public SemesterController(SemesterService semesterService) {
+	@Autowired
+	private SemesterRepository semesterRepository;
 
-		this.semesterService = semesterService;
-	}
+	@GetMapping("/students/{studentId}/semesters")
+	public ResponseEntity<List<Semester>> getAllSemestersByStudentId(@PathVariable(value = "studentId") int studentId) {
 
-	@PostMapping("/semesters")
-	public ResponseEntity<Semester> createSemester(@RequestBody CreateSemesterInput createSemesterInput) {
-
-		// Student studentCreated =
-		// studentRepository.save(createStudentInput.toStudent());
-		// you can call the repository class directly in the controller but it is good
-		// to create a service class
-		// service class helps with separation of responsibility
-
-		Semester semesterCreated = semesterService.create(createSemesterInput.toSemester());
-		return new ResponseEntity<>(semesterCreated, HttpStatus.CREATED);
+		List<Semester> semesters = semesterRepository.findByStudentId(studentId);
+		// List<Semester> semesters =
+		// semesterService.findAllSemestersByStudent(studentId);
+		return new ResponseEntity<>(semesters, HttpStatus.OK);
 	}
 
 	@GetMapping("/semesters")
 	public ResponseEntity<List<Semester>> getSemester() {
-		List<Semester> semesters = semesterService.findAll();
+		List<Semester> semesters = semesterRepository.findAll();
 
 		return new ResponseEntity<>(semesters, HttpStatus.OK);
 
@@ -51,7 +51,7 @@ public class SemesterController {
 
 	@GetMapping("/semesters/{id}")
 	public ResponseEntity<Semester> onestudent(@PathVariable int id) {
-		Optional<Semester> optionalSemester = semesterService.findById(id);
+		Optional<Semester> optionalSemester = semesterRepository.findById(id);
 
 		if (optionalSemester.isPresent()) {
 			return new ResponseEntity<>(optionalSemester.get(), HttpStatus.OK);
@@ -60,10 +60,43 @@ public class SemesterController {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
-	@PatchMapping("/semesters/{id}")
-	public ResponseEntity<Semester> updateSemester(@PathVariable int id,
+	@PostMapping("/semesters")
+	public ResponseEntity<Semester> createSemester(@RequestBody CreateSemesterInput createSemesterInput) {
+
+		// Semester semesterCreated =
+		// semesterRepository.save(createSemesterInput.toSemester());
+		// you can call the repository class directly in the controller but it is good
+		// to create a service class
+		// service class helps with separation of responsibility
+
+		Semester semesterCreated = semesterRepository.save(createSemesterInput.toSemester());
+		return new ResponseEntity<>(semesterCreated, HttpStatus.CREATED);
+	}
+
+	@PostMapping("/students/{studentId}/semesters")
+	public ResponseEntity<Semester> createSemester(@PathVariable(value = "studentId") int studentId,
+			@RequestBody CreateSemesterInput semesterRequest) {
+		
+		Optional<Student> optionalStudent = studentRepository.findById(studentId);
+		if (optionalStudent.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		Student student = optionalStudent.get();
+		Semester semester = semesterRequest.toSemester();
+		semester.setSemesterStudent(student);
+		
+		Semester semesterCreated = semesterRepository.save(semester);
+		return new ResponseEntity<>(semesterCreated, HttpStatus.CREATED);
+	
+		}
+
+	@PutMapping("/semesters/{id}")
+	public ResponseEntity<Semester> updateSemester(@PathVariable("id") int id,
 			@RequestBody UpdateSemesterInput updateSemesterInput) {
-		Optional<Semester> optionalSemester = semesterService.findById(id);
+//	    Semester semester = semesterRepository.findById(id)
+//	        .orElseThrow(() -> new ResourceNotFoundException("CommentId " + id + "not found"));
+
+		Optional<Semester> optionalSemester = semesterRepository.findById(id);
 
 		if (optionalSemester.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -71,19 +104,28 @@ public class SemesterController {
 
 		Semester semesterToUpdate = optionalSemester.get();
 
-		semesterToUpdate.setSemesterUnweightedGPA(updateSemesterInput.semWeightedGPA());
-		semesterToUpdate.setSemesterUnweightedGPA(updateSemesterInput.semUnweightedGPA());
+		semesterToUpdate.setSemesterUnweightedGPA(updateSemesterInput.sem_unweighted_gpa());
+		semesterToUpdate.setSemesterWeightedGPA(updateSemesterInput.sem_weighted_gpa());
 
-		Semester semesterUpdated = semesterService.update(semesterToUpdate);
-
-		return new ResponseEntity<>(semesterUpdated, HttpStatus.OK);
+		return new ResponseEntity<>(semesterRepository.save(semesterToUpdate), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/semesters/{id}")
-	public ResponseEntity<Void> deleteTask(@PathVariable int id) {
-		semesterService.delete(id);
+	public ResponseEntity<Void> deleteSemster(@PathVariable int id) {
+		semesterRepository.deleteById(id);
 
 		return ResponseEntity.noContent().build();
 	}
 
+	@DeleteMapping("/students/{studentId}/semesters")
+	public ResponseEntity<List<Semester>> deleteAllSemestersofStudent(
+			@PathVariable(value = "studentId") int studentId) {
+		Optional<Student> optionalStudent = studentRepository.findById(studentId);
+		if (!optionalStudent.isPresent()) {
+			throw new ResourceNotFoundException("Not found Student with id = " + studentId);
+		}
+
+		semesterRepository.deleteByStudentId(studentId);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
 }

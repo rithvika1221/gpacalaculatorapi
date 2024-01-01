@@ -6,7 +6,7 @@ import java.util.Date;
 import com.fbla.gpacalculatorapi.model.Semester;
 
 
-public record CreateSemesterInput(String semesterName, Double sem_weighted_gpa, Double sem_unweighted_gpa) {
+public record CreateSemesterInput(String semester_name, Double sem_weighted_gpa, Double sem_unweighted_gpa) {
 	
    
 	// this function takes the parameters which is gets from the request
@@ -14,9 +14,9 @@ public record CreateSemesterInput(String semesterName, Double sem_weighted_gpa, 
 	public Semester toSemester() {
 		Semester semester = new Semester();
 
-        semester.setSemesterName(semesterName);
+        semester.setSemesterName(semester_name);
         semester.setSemesterWeightedGPA(sem_weighted_gpa);
-        semester.setSemesterWeightedGPA(sem_unweighted_gpa);
+        semester.setSemesterUnweightedGPA(sem_unweighted_gpa);
 
         return semester;
     }

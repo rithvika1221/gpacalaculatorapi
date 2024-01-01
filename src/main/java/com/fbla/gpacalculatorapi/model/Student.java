@@ -5,6 +5,7 @@ import java.util.List;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,7 +22,7 @@ import jakarta.persistence.Table;
  */
 
 @Entity
-@Table(name="student", schema = "dashboard")
+@Table(name="student", schema = "dashboard_updated")
 public class Student {
 	
 	// this variable store the id of the student
@@ -32,9 +33,11 @@ public class Student {
 	 
 	
 	// this  variable stores the student name
-	private String studentName;
+	@Column(name="student_name")
+	 private String studentName;
 	
 	// this  variable stores the student password
+	@Column(name="password")
 	private String password;
 	
 	@Column(name="total_weighted_gpa")
@@ -46,8 +49,7 @@ public class Student {
 	private double totalUnweightedGPA;
 	
 
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "fk_student_id", referencedColumnName = "student_id")
+	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY, mappedBy="student")
 	private List<Semester> semester;
 	
 	
@@ -75,6 +77,25 @@ public class Student {
 	
 	}
 	
+	/**
+	 * get method for student name
+	 * @return studentId
+	 */
+	public int getStudentId()
+	{
+		return id;
+		
+	}
+	
+	
+	
+	/**
+	 * @param studentId
+	 */
+	public void setstudentName1(int studentId)
+	{
+		this.id = studentId;
+	}
 	
 	/**
 	 * get method for student name
@@ -91,7 +112,7 @@ public class Student {
 	/**
 	 * @param studentName
 	 */
-	public void setstudentName(String studentName)
+	public void setStudentName(String studentName)
 	{
 		this.studentName = studentName;
 	}

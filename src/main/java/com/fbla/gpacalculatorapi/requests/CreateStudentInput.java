@@ -14,10 +14,10 @@ public record CreateStudentInput(String studentName, String password, Double tot
 	public Student toStudent() {
         Student student = new Student();
 
-        student.setstudentName(studentName);
+        student.setStudentName(studentName);
         student.setStudentPassword(password);
         student.setStudentWeightedGPA(total_weighted_gpa);
-        student.setStudentWeightedGPA(total_unweighted_gpa);
+        student.setStudentUnweightedGPA(total_unweighted_gpa);
 
         return student;
     }
