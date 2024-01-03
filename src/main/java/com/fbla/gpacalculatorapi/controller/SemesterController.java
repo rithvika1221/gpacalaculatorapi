@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ import com.fbla.gpacalculatorapi.service.SemesterService;
 import com.fbla.gpacalculatorapi.requests.CreateSemesterInput;
 import com.fbla.gpacalculatorapi.requests.UpdateSemesterInput;
 
+@CrossOrigin(maxAge = 3600)
 @RestController
 public class SemesterController {
 	
@@ -90,7 +92,7 @@ public class SemesterController {
 	
 		}
 
-	@PutMapping("/semesters/{id}")
+	@PutMapping("/students/{studentId}/semesters/{id}")
 	public ResponseEntity<Semester> updateSemester(@PathVariable("id") int id,
 			@RequestBody UpdateSemesterInput updateSemesterInput) {
 //	    Semester semester = semesterRepository.findById(id)
@@ -104,13 +106,13 @@ public class SemesterController {
 
 		Semester semesterToUpdate = optionalSemester.get();
 
-		semesterToUpdate.setSemesterUnweightedGPA(updateSemesterInput.sem_unweighted_gpa());
-		semesterToUpdate.setSemesterWeightedGPA(updateSemesterInput.sem_weighted_gpa());
+		semesterToUpdate.SetSemUnweightedGPA(updateSemesterInput.semUnweightedGPA());
+		semesterToUpdate.setSemWeightedGPA(updateSemesterInput.semWeightedGPA());
 
 		return new ResponseEntity<>(semesterRepository.save(semesterToUpdate), HttpStatus.OK);
 	}
 
-	@DeleteMapping("/semesters/{id}")
+	@DeleteMapping("/students/{studentId}/semesters/{id}")
 	public ResponseEntity<Void> deleteSemster(@PathVariable int id) {
 		semesterRepository.deleteById(id);
 

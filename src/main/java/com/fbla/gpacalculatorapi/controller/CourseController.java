@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +27,7 @@ import com.fbla.gpacalculatorapi.requests.CreateCourseInput;
 import com.fbla.gpacalculatorapi.requests.CreateSemesterInput;
 import com.fbla.gpacalculatorapi.requests.UpdateCourseInput;
 
-
+@CrossOrigin(maxAge = 3600)
 @RestController
 public class CourseController {
        
@@ -98,7 +99,7 @@ public class CourseController {
 		return new ResponseEntity<>(courseCreated, HttpStatus.CREATED);
 	}
 
-	@PutMapping("/courses/{id}")
+	@PutMapping("/students/{studentId}/semesters/{semesterId}/courses/{id}")
 	public ResponseEntity<Course> updateCourse(@PathVariable("id") int id,
 			@RequestBody UpdateCourseInput updateCourseInput) {
 
@@ -111,16 +112,16 @@ public class CourseController {
 
 		Course courseToUpdate = optionalCourse.get();
 
-		courseToUpdate.setCourseCredit(updateCourseInput.course_credit());
-		courseToUpdate.setCourseGrade(updateCourseInput.course_grade());
-		courseToUpdate.setCourseName(updateCourseInput.course_name());
-		courseToUpdate.setCourseType(updateCourseInput.course_type());
+		courseToUpdate.setCourseCredit(updateCourseInput.courseCredit());
+		courseToUpdate.setCourseGrade(updateCourseInput.courseGrade());
+		courseToUpdate.setCourseName(updateCourseInput.courseName());
+		courseToUpdate.setCourseType(updateCourseInput.courseType());
 	
 
 		return new ResponseEntity<>(courseRepository.save(courseToUpdate), HttpStatus.OK);
 	}
 
-	@DeleteMapping("/courses/{id}")
+	@DeleteMapping("/students/{studentId}/semesters/{semesterId}/courses/{id}")
 	public ResponseEntity<Void> deleteCourse(@PathVariable int courseId) {
 		courseRepository.deleteById(courseId);
 

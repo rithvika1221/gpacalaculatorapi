@@ -22,30 +22,30 @@ import jakarta.persistence.Table;
  */
 
 @Entity
-@Table(name="student", schema = "dashboard_updated")
+@Table(name="student", schema = "gpacalculator")
 public class Student {
 	
 	// this variable store the id of the student
 	 @Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    @Column(nullable = false, name = "student_id")
+	    @Column(nullable = false, name = "id")
 	    private Integer id;
 	 
 	
 	// this  variable stores the student name
-	@Column(name="student_name")
+	@Column(name="studentName")
 	 private String studentName;
 	
 	// this  variable stores the student password
 	@Column(name="password")
 	private String password;
 	
-	@Column(name="total_weighted_gpa")
+	@Column(name="totalWeightedGPA")
 	// this  variable stores the weighted GPA
 	private double totalWeightedGPA;
 	
 	// this  variable stores the UnWeighted GPA
-	@Column(name="total_unweighted_gpa")
+	@Column(name="totalUnweightedGPA")
 	private double totalUnweightedGPA;
 	
 

@@ -25,27 +25,27 @@ public class Course {
 	// this variable store the id of the course
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(nullable = false, name = "course_id")
+	@Column(nullable = false, name = "id")
 	private Integer id;
 
 	// this variable stores the course name
-	@Column(name = "course_name")
+	@Column(name = "courseName")
 	private String courseName;
 
-	@Column(name = "course_grade")
+	@Column(name = "courseGrade")
 	// this variable stores the course grade
 	private String courseGrade;
 
 	// this variable stores the course credit
-	@Column(name = "course_credit")
+	@Column(name = "courseCredit")
 	private double courseCredit;
 
 	// this variable stores the course credit
-	@Column(name = "course_type")
+	@Column(name = "courseType")
 	private String courseType;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "student_id", nullable = false)
+	@JoinColumn(name = "semesterId", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Semester semester;
 

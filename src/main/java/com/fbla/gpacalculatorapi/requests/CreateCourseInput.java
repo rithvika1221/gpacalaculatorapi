@@ -6,7 +6,7 @@ import java.util.Date;
 import com.fbla.gpacalculatorapi.model.Course;
 
 
-public record CreateCourseInput(String course_name, String course_grade,  Double course_credit, String course_type) {
+public record CreateCourseInput(String courseName, String courseGrade,  Double courseCredit, String courseType) {
 	
    
 	// this function takes the parameters which is gets from the request
@@ -14,10 +14,10 @@ public record CreateCourseInput(String course_name, String course_grade,  Double
 	public Course toCourse() {
 		Course course = new Course();
 
-		course.setCourseName(course_name);
-		course.setCourseGrade(course_grade);
-		course.setCourseCredit(course_credit);
-		course.setCourseType(course_type);
+		course.setCourseName(courseName);
+		course.setCourseGrade(courseGrade);
+		course.setCourseCredit(courseCredit);
+		course.setCourseType(courseType);
 
         return course;
     }

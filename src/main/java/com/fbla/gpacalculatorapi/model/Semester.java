@@ -32,32 +32,32 @@ public class Semester {
 	// this variable store the id of the Semester
 	 @Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    @Column(nullable = false, name="semester_id")
+	    @Column(nullable = false, name="id")
 	    private Integer id;
 	 
 	 
 	// this  variable stores the semester name
-	@Column(name="semester_name") 
+	@Column(name="semesterName") 
 	private String semesterName;
 	
 	
 	
-	@Column(name="sem_weighted_gpa")
+	@Column(name="semWeightedGPA")
 	// this  variable stores the weighted GPA
 	private double semWeightedGPA;
 	
 	// this  variable stores the UnWeighted GPA
-	@Column(name="sem_unweighted_gpa")
+	@Column(name="semUnweightedGPA")
 	private double semUnweightedGPA;
 	
 	
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "student_id", nullable = false)
+    @JoinColumn(name = "studentId", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Student student;
 	
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-	@JoinColumn(name = "semester_id", referencedColumnName = "semester_id")
+	@JoinColumn(name = "semesterId", referencedColumnName = "id")
 	private List<Course> course;
 	
 	// default constructor
@@ -125,7 +125,7 @@ public class Semester {
 	
 	
 
-	public double getSemesterWeightedGPA()
+	public double getSemWeightedGPA()
 	{
 		return semWeightedGPA;
 		
@@ -134,7 +134,7 @@ public class Semester {
 	/**
 	 * @param getSemesterWeightedGPA
 	 */
-	public void setSemesterWeightedGPA(double semWeightedGPA)
+	public void setSemWeightedGPA(double semWeightedGPA)
 	{
 		this.semWeightedGPA = semWeightedGPA;
 	}
@@ -143,7 +143,7 @@ public class Semester {
 	/**
 	 * @return
 	 */
-	public double getSemesterUnweightedGPA()
+	public double getSemUnweightedGPA()
 	{
 		return semUnweightedGPA;
 		
@@ -153,7 +153,7 @@ public class Semester {
 	/**
 	 * @param SemesterUnweightedGPA
 	 */
-	public void setSemesterUnweightedGPA(double semUnweightedGPA)
+	public void SetSemUnweightedGPA(double semUnweightedGPA)
 	{
 		this.semUnweightedGPA = semUnweightedGPA;
 	}
