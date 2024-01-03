@@ -153,7 +153,7 @@ public class Semester {
 	/**
 	 * @param SemesterUnweightedGPA
 	 */
-	public void SetSemUnweightedGPA(double semUnweightedGPA)
+	public void setSemUnweightedGPA(double semUnweightedGPA)
 	{
 		this.semUnweightedGPA = semUnweightedGPA;
 	}

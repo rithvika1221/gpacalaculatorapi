@@ -106,7 +106,7 @@ public class SemesterController {
 
 		Semester semesterToUpdate = optionalSemester.get();
 
-		semesterToUpdate.SetSemUnweightedGPA(updateSemesterInput.semUnweightedGPA());
+		semesterToUpdate.setSemUnweightedGPA(updateSemesterInput.semUnweightedGPA());
 		semesterToUpdate.setSemWeightedGPA(updateSemesterInput.semWeightedGPA());
 
 		return new ResponseEntity<>(semesterRepository.save(semesterToUpdate), HttpStatus.OK);
