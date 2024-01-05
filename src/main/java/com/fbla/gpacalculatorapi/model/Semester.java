@@ -53,12 +53,12 @@ public class Semester {
 	
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "studentId", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Student student;
+  @OnDelete(action = OnDeleteAction.CASCADE)
+   private Student student;
 	
-	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-	@JoinColumn(name = "semesterId", referencedColumnName = "id")
-	private List<Course> course;
+//	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+//	@JoinColumn(name = "semesterId", referencedColumnName = "id")
+//	private List<Course> course;
 	
 	// default constructor
 	public Semester() {
@@ -74,7 +74,7 @@ public class Semester {
 		this.semesterName = semesterName;
 		this.semWeightedGPA = semWeightedGPA;
 		this.semUnweightedGPA = semUnweightedGPA;
-		this.course = course;
+		//this.course = course;
 	
 	}
 	

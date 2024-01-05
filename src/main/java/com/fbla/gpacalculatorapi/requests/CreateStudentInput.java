@@ -6,7 +6,7 @@ import java.util.Date;
 import com.fbla.gpacalculatorapi.model.Student;
 
 
-public record CreateStudentInput(String studentName, String password, Double studentWeightedGPA, Double studentUnweightedGPA) {
+public record CreateStudentInput(String studentName, String studentPassword, String studentEmail, Double studentWeightedGPA, Double studentUnweightedGPA) {
 	
    
 	// this function takes the parameters which is gets from the request
@@ -15,7 +15,8 @@ public record CreateStudentInput(String studentName, String password, Double stu
         Student student = new Student();
 
         student.setStudentName(studentName);
-        student.setStudentPassword(password);
+        student.setStudentPassword(studentPassword);
+        student.setStudentEmail(studentEmail);
         student.setStudentWeightedGPA(studentWeightedGPA);
         student.setStudentUnweightedGPA(studentUnweightedGPA);
 

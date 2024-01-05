@@ -93,7 +93,7 @@ public class CourseController {
 		Course course =createCourseRequest.toCourse();
 
 		Semester semester = optionalSemester.get();
-				course.setCourseSemester(semester);
+			course.setCourseSemester(semester);
 		
 		Course courseCreated = courseRepository.save(course);
 		return new ResponseEntity<>(courseCreated, HttpStatus.CREATED);
@@ -121,14 +121,14 @@ public class CourseController {
 		return new ResponseEntity<>(courseRepository.save(courseToUpdate), HttpStatus.OK);
 	}
 
-	@DeleteMapping("/students/{studentId}/semesters/{semesterId}/courses/{id}")
+	@DeleteMapping("/students/{studentId}/semesters/{semesterId}/courses/{courseId}")
 	public ResponseEntity<Void> deleteCourse(@PathVariable int courseId) {
 		courseRepository.deleteById(courseId);
 
 		return ResponseEntity.noContent().build();
 	}
 
-	@DeleteMapping("/students/{studentId}/semesters/{semesterId}/courses/{coursesId}")
+	@DeleteMapping("/students/{studentId}/semesters/{semesterId}/courses")
 	public ResponseEntity<List<Course>> deleteAllCoursesofSemester(
 			@PathVariable(value = "semesterId") int semesterId) {
 		Optional<Semester> optionalSemester = semesterRepository.findById(semesterId);

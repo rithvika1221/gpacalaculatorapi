@@ -1,4 +1,5 @@
 package com.fbla.gpacalculatorapi.controller;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,12 +38,40 @@ public class StudentController {
 		return new ResponseEntity<>(studentCreated, HttpStatus.CREATED);
 	}
 
+//	@GetMapping("/students")
+//	public ResponseEntity<List<Student>> getStudents() {
+//		List<Student> students = studentRepository.findAll();
+//
+//		return new ResponseEntity<>(students, HttpStatus.OK);
+//
+//	}
+//	
+//	@GetMapping("/students")
+//	public ResponseEntity<List<Student>> getStudents(@RequestParam(name = "email", required = false) String email) {
+//	    List<Student> students;
+//
+//	    if (email != null) {
+//	        // If email parameter is provided, use it to filter results
+//	        students = studentRepository.findByStudentEmail(email);
+//	    } else {
+//	        // If no parameter is provided, return all students
+//	        students = studentRepository.findAll();
+//	    }
+//
+//	    return new ResponseEntity<>(students, HttpStatus.OK);
+//	}
+	
 	@GetMapping("/students")
-	public ResponseEntity<List<Student>> getStudents() {
-		List<Student> students = studentRepository.findAll();
-
-		return new ResponseEntity<>(students, HttpStatus.OK);
-
+	public ResponseEntity<List<Student>> getStudents(@RequestParam(name = "$filter", required = false) String filter) {
+	    if (filter != null && filter.startsWith("email eq '") && filter.endsWith("'")) {
+	        String email = filter.substring(10, filter.length() - 1); // Extract the email from the filter string
+	        List<Student> students = studentRepository.findByStudentEmail(email);
+	        return new ResponseEntity<>(students, HttpStatus.OK);
+	    } else {
+	        // If no filter is provided, return all students
+	        List<Student> students = studentRepository.findAll();
+	        return new ResponseEntity<>(students, HttpStatus.OK);
+	    }
 	}
 
 	@GetMapping("/students/{id}")

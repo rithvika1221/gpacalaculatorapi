@@ -85,7 +85,7 @@ public class SemesterController {
 		}
 		Student student = optionalStudent.get();
 		Semester semester = semesterRequest.toSemester();
-		semester.setSemesterStudent(student);
+	   semester.setSemesterStudent(student);
 		
 		Semester semesterCreated = semesterRepository.save(semester);
 		return new ResponseEntity<>(semesterCreated, HttpStatus.CREATED);
