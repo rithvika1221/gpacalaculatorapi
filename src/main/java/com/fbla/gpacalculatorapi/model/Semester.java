@@ -56,9 +56,6 @@ public class Semester {
   @OnDelete(action = OnDeleteAction.CASCADE)
    private Student student;
 	
-//	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-//	@JoinColumn(name = "semesterId", referencedColumnName = "id")
-//	private List<Course> course;
 	
 	// default constructor
 	public Semester() {

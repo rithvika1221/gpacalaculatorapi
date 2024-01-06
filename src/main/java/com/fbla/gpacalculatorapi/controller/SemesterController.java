@@ -38,8 +38,6 @@ public class SemesterController {
 	public ResponseEntity<List<Semester>> getAllSemestersByStudentId(@PathVariable(value = "studentId") int studentId) {
 
 		List<Semester> semesters = semesterRepository.findByStudentId(studentId);
-		// List<Semester> semesters =
-		// semesterService.findAllSemestersByStudent(studentId);
 		return new ResponseEntity<>(semesters, HttpStatus.OK);
 	}
 

@@ -36,14 +36,25 @@ public class Settings {
         this.gpa = gpa;
     }
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    /**
+	 * get method for semester id
+	 * @return semesterName
+	 */
+	public Long getSettingId()
+	{
+		return id;
+		
+	}
+	
+	
+	
+	/**
+	 * @param studentId
+	 */
+	public void setSettingId(Long settingsId)
+	{
+		this.id = settingsId;
+	}
 
     public String getLetter() {
         return letter;

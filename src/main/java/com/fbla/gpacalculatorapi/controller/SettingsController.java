@@ -39,11 +39,12 @@ public class SettingsController {
     }
 
 	@GetMapping("/students/{studentId}/settings")
-	public ResponseEntity<List<Settings>> getAllSemestersByStudentId(@PathVariable(value = "studentId") int studentId) {
+	public ResponseEntity<List<Settings>> getAllSettingsByStudentId(@PathVariable(value = "studentId") int studentId) {
 
 		List<Settings> settings = settingsRepository.findByStudentId(studentId);
 		return new ResponseEntity<>(settings, HttpStatus.OK);
 	}
+
 	
 	@PostMapping("/students/{studentId}/settings")
 	public ResponseEntity<Settings> createSettings(@PathVariable(value = "studentId") int studentId,
