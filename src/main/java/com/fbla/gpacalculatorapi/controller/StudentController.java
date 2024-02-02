@@ -38,28 +38,6 @@ public class StudentController {
 		return new ResponseEntity<>(studentCreated, HttpStatus.CREATED);
 	}
 
-//	@GetMapping("/students")
-//	public ResponseEntity<List<Student>> getStudents() {
-//		List<Student> students = studentRepository.findAll();
-//
-//		return new ResponseEntity<>(students, HttpStatus.OK);
-//
-//	}
-//	
-//	@GetMapping("/students")
-//	public ResponseEntity<List<Student>> getStudents(@RequestParam(name = "email", required = false) String email) {
-//	    List<Student> students;
-//
-//	    if (email != null) {
-//	        // If email parameter is provided, use it to filter results
-//	        students = studentRepository.findByStudentEmail(email);
-//	    } else {
-//	        // If no parameter is provided, return all students
-//	        students = studentRepository.findAll();
-//	    }
-//
-//	    return new ResponseEntity<>(students, HttpStatus.OK);
-//	}
 	
 	@GetMapping("/students")
 	public ResponseEntity<List<Student>> getStudents(@RequestParam(name = "$filter", required = false) String filter) {
